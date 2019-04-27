@@ -15,8 +15,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------'
  */
 [0] = KEYMAP( \
-  M(MK_READ),  KC_AUDIO_VOL_UP,    LT(1, KC_ENTER),
-  KC_LEFT,     KC_AUDIO_VOL_DOWN,  KC_RIGHT  \
+  KC_AUDIO_MUTE,  		KC_AUDIO_VOL_UP,    LT(1, KC_MEDIA_PLAY_PAUSE),
+  KC_MEDIA_PREV_TRACK,	KC_AUDIO_VOL_DOWN,  KC_MEDIA_NEXT_TRACK  \
 ),
 /*
 [0] = KEYMAP( \
@@ -32,8 +32,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------'
  */
 [1] = KEYMAP( \
-  RESET,  KC_2,  KC_3,  
-  KC_4,  KC_5,  KC_6  \
+  RESET,  			KC_2,  KC_3,  
+  KC_SYSTEM_SLEEP,  KC_5,  KC_SYSTEM_WAKE  \
 ),
 
 };
