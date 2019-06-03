@@ -175,6 +175,7 @@ ifeq ($(strip $(RGB_MATRIX_ENABLE)), IS31FL3737)
 endif
 
 ifeq ($(strip $(RGB_MATRIX_ENABLE)), WS2812)
+    OPT_DEFS += -DRGB_MATRIX_ENABLE
     OPT_DEFS += -DWS2812
     SRC += ws2812.c
 endif

@@ -99,25 +99,15 @@ const rgb_matrix_driver_t rgb_matrix_driver = {
 };
 #endif
 
-#elif defined(WS2812)
+#endif
 
-extern LED_TYPE led[DRIVER_LED_TOTAL];
+#if defined(WS2812)
 
-  static void flush( void )
-  {
-    // Assumes use of RGB_DI_PIN
-    ws2812_setleds(led, DRIVER_LED_TOTAL);
-  }
+const rgb_matrix_driver_t rgb_matrix_driver = {
+    .init = WS2812_init,
+    .flush = WS2812_send_colors,
+    .set_color = WS2812_set_color,
+    .set_color_all = WS2812_set_color_all,
+};
 
-  static void init( void )
-  {
-
-  }
-
-  const rgb_matrix_driver_t rgb_matrix_driver = {
-      .init = init,
-      .flush = flush,
-      .set_color = ws2812_setled,
-      .set_color_all = ws2812_setled_all,
-  };
 #endif

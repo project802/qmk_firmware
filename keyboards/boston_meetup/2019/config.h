@@ -186,7 +186,7 @@
 
 #define RGBLIGHT_ANIMATIONS
 
-#define RGBLED_NUM 10
+#define RGBLED_NUM 6
 #define RGB_DI_PIN B5
 #define DRIVER_LED_TOTAL RGBLED_NUM
 
