@@ -16,8 +16,18 @@
 
 #include QMK_KEYBOARD_H
 
+//Tap Dance Declarations
+enum {
+  TD_RSHIFT_RESET = 0
+};
+
+//Tap Dance Definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [TD_RSHIFT_RESET]  = ACTION_TAP_DANCE_DOUBLE(KC_RSHIFT, RESET)
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = {
-			{ KC_0, KC_1, KC_RSHIFT }
+			{ KC_0, KC_1, KC_RSHIFT /*TD(TD_RSHIFT_RESET)*/ }
 		}
 };

@@ -16,23 +16,31 @@
 
 #include "binary.h"
 
-#define BIT_COLLECTION_TIMEOUT 500
+#define KEY_BUILDER_TIMEOUT_MS   350
+#define DFU_TIMEOUT_MS           7000
 
 void matrix_init_kb(void) {
   // Turn status LED on
-  setPinOutput(C13);
-  writePinHigh(C13);
+  setPinOutput( C13 );
+  writePinHigh( C13 );
 
   matrix_init_user();
 }
 
-uint16_t timeLatch = 0;
+uint16_t keyBuilderTimer = 0;
 uint16_t keyBuilder = 0;
 unsigned bitsCollected = 0;
+
+uint16_t dfuTimer = 0;
 
 bool process_record_kb( uint16_t keycode, keyrecord_t *record )
 {
 	bool retVal = false;
+	
+	dprintf( "key: %d pressed: %d\r\n", keycode, record->event.pressed );
+	
+	// Any action press or release should always reset the DFU timer
+	dfuTimer = 0;
 	
 	switch( keycode )
 	{
@@ -43,7 +51,7 @@ bool process_record_kb( uint16_t keycode, keyrecord_t *record )
 				break;
 			}
 			
-			timeLatch = timer_read();
+			keyBuilderTimer = timer_read();
 			keyBuilder = keyBuilder << 1;
 			
 			if( keycode == KC_1 )
@@ -51,14 +59,21 @@ bool process_record_kb( uint16_t keycode, keyrecord_t *record )
 				keyBuilder |= 1;
 			}
 			
+			dprintf( "building: 0x%04x\r\n", keyBuilder );
+			
 			// Fast-forward the timeout for sending the code if max bits are collected
 			if( ++bitsCollected >= 16 )
 			{
-				timeLatch -= BIT_COLLECTION_TIMEOUT;
+				keyBuilderTimer -= KEY_BUILDER_TIMEOUT_MS;
 			}
 			break;
-		
+
 		default:
+			if( record->event.pressed )
+			{
+				dfuTimer = timer_read();
+			}
+
 			retVal = process_record_user( keycode, record );
 			break;
 	}
@@ -68,12 +83,18 @@ bool process_record_kb( uint16_t keycode, keyrecord_t *record )
 
 void matrix_scan_kb( void )
 {
-	if( (timeLatch > 0) && (timer_elapsed(timeLatch) > 500) )
+	if( (keyBuilderTimer > 0) && (timer_elapsed(keyBuilderTimer) > KEY_BUILDER_TIMEOUT_MS) )
 	{
+		dprintf( "Sending 0x%04x\r\n", keyBuilder );
 		tap_code( keyBuilder );
 		keyBuilder = 0;
-		timeLatch = 0;
+		keyBuilderTimer = 0;
 		bitsCollected = 0;
+	}
+	
+	if( (dfuTimer > 0) && (timer_elapsed(dfuTimer) > DFU_TIMEOUT_MS) )
+	{
+		reset_keyboard();
 	}
 	
 	matrix_scan_user();
@@ -81,5 +102,7 @@ void matrix_scan_kb( void )
 
 void keyboard_post_init_user( void )
 {
+#if CONSOLE_ENABLE == yes
 	debug_enable = true;
+#endif
 }
