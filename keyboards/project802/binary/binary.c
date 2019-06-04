@@ -102,7 +102,7 @@ void matrix_scan_kb( void )
 
 void keyboard_post_init_user( void )
 {
-#if CONSOLE_ENABLE == yes
+#if CONSOLE_ENABLE
 	debug_enable = true;
 #endif
 }
