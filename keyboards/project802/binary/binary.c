@@ -15,9 +15,12 @@
  */
 
 #include "binary.h"
+#include "audio.h"
 
 #define KEY_BUILDER_TIMEOUT_MS   350
 #define DFU_TIMEOUT_MS           7000
+
+float toneKeySent[][2] = SONG( TERMINAL_SOUND );
 
 void matrix_init_kb(void) {
   // Turn status LED on
@@ -90,6 +93,7 @@ void matrix_scan_kb( void )
 		keyBuilder = 0;
 		keyBuilderTimer = 0;
 		bitsCollected = 0;
+		PLAY_SONG( toneKeySent );
 	}
 	
 	if( (dfuTimer > 0) && (timer_elapsed(dfuTimer) > DFU_TIMEOUT_MS) )
