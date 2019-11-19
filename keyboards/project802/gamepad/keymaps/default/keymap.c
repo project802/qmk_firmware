@@ -27,7 +27,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [1] = {
 			{ RESET,    KC_1,    KC_2,    KC_3,    KC_4,    KC_O },
 			{ KC_TAB,   KC_Q,    KC_UP,   KC_E,    KC_R,    KC_M },
-			{ KC_CAPS,  KC_LEFT, KC_DOWN, KC_RGHT, KC_F,    KC_F1 },
+			{ KC_CAPS,  KC_LEFT, KC_DOWN, KC_RGHT, KC_G,    KC_F1 },
 			{ KC_LSFT,  KC_Z,    KC_X,    KC_C,    KC_V,    XXXXXXX },
 			{ KC_LCTRL, XXXXXXX, XXXXXXX, XXXXXXX, KC_SPC,  XXXXXXX }
 		}
