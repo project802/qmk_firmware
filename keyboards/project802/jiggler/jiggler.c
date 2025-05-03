@@ -1,18 +1,19 @@
 #include "quantum.h"
 #include "print.h"
 
-#define PRESS_MAX_MS (2 * 1000)
-#define WAIT_MAX_MS (60 * 1000)
-
-typedef enum {
-    JIGGLER_STATE_IDLE,
-    JIGGLER_STATE_PRESSED,
-} eJigglerState;
+#define PRESS_MAX_MS    (2 * 1000)
+#define WAIT_MAX_MS     (60 * 1000)
+#define INTERVAL_MIN_MS (100)
 
 static deferred_token jiggler_token = INVALID_DEFERRED_TOKEN;
 
 uint32_t jiggler_callback( uint32_t trigger_time, void *cb_arg )
 {
+    typedef enum {
+        JIGGLER_STATE_IDLE,
+        JIGGLER_STATE_PRESSED,
+    } eJigglerState;
+
     static eJigglerState state = JIGGLER_STATE_IDLE;
     static report_mouse_t report = { 0 };
     
@@ -25,10 +26,10 @@ uint32_t jiggler_callback( uint32_t trigger_time, void *cb_arg )
     {
         randShift = ((unsigned int) rand()) & 0b111;
     }
-    while( randShift == 0 );
+    while( randShift == 0 || randShift > 4);
     
 
-    uprintf( "jiggler_callback enter: state=%u\n", state );
+    uprintf( "jiggler_callback enter: state=%u retVal=0x%X randShift=%u\n", state, retVal, randShift );
 
     switch( state )
     {
@@ -51,6 +52,8 @@ uint32_t jiggler_callback( uint32_t trigger_time, void *cb_arg )
 
     host_mouse_send( &report );
 
+    if( retVal < INTERVAL_MIN_MS ) retVal = INTERVAL_MIN_MS;
+    
     uprintf( "jiggler_callback exit: state=%u retVal=%u\n", state, retVal );
     
     return (uint32_t) retVal;
