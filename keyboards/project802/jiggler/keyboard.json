@@ -20,7 +20,7 @@
         "extrakey": true,
         "nkro": true,
         "deferred_exec": true,
-        "console": true
+        "console": false
     },
     "layouts": {
         "LAYOUT": {
